@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jupyter_server
+    user: root
+    ports:
+      - "1888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./drive:/home/jovyan/drive
+      - ./sample:/home/jovyan/sample
+      - jupyter_data:/home/jovyan/.local
+      - jupyter_tmp:/tmp
+      - jupyter_cache:/home/jovyan/.cache
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - GRANT_SUDO=yes
+    command: ["sh", "-c", "chown -R 1000:1000 /home/jovyan/.local && start-notebook.sh --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='https://colab.research.google.com'"]
+
+volumes:
+  notebooks:
+  drive:
+  sample:
+  jupyter_data:
+  jupyter_tmp:
+  jupyter_cache:
